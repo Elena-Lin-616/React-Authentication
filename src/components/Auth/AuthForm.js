@@ -22,6 +22,42 @@ const AuthForm = () => {
     setIsLoading(true);
 
     if (isLogin) {
+      fetch(
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAYxTFqq5bGdBgpsFpv-KUUNygDTUG0Vlw",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: enteredEmail,
+            password: enteredPassword,
+            returnSecureToken: true,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((res) => {
+          setIsLoading(false);
+          if (res.ok) {
+            return res.json();
+          } else {
+            // if not ok ->data will have error information
+            return res.json().then((data) => {
+              //show an error modal
+              let errorMsg = "Authentication failed!";
+              if (data && data.error && data.error.message) {
+                errorMsg = data.error.message;
+              }
+              alert(errorMsg);
+            });
+          }
+        })
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((err) => {
+          alert(err.errorMsg);
+        });
     } else {
       //sign up -> POST with email & password -> create a user in server
       fetch(
@@ -37,22 +73,27 @@ const AuthForm = () => {
             "Content-Type": "application/json",
           },
         }
-      ).then((res) => {
-        setIsLoading(false);
-        if (res.ok) {
-          console.log(res);
-        } else {
-          // if not ok ->data will have error information
-          return res.json().then((data) => {
-            //show an error modal
-            let errorMsg = "Authentication failed!";
-            if (data && data.error && data.error.message) {
-              errorMsg = data.error.message;
-            }
-            alert(errorMsg);
-          });
-        }
-      });
+      )
+        .then((res) => {
+          setIsLoading(false);
+          if (res.ok) {
+            return res.json();
+          } else {
+            // if not ok ->data will have error information
+            return res.json().then((data) => {
+              //show an error modal
+              let errorMsg = "Authentication failed!";
+              if (data && data.error && data.error.message) {
+                errorMsg = data.error.message;
+              }
+              throw new Error(errorMsg);
+            });
+          }
+        })
+        .then((data) => {})
+        .catch((err) => {
+          alert(err.errorMsg);
+        });
     }
   };
 
