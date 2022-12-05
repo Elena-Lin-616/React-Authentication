@@ -1,10 +1,12 @@
 import classes from "./ProfileForm.module.css";
 import { useRef, useContext } from "react";
 import AuthContext from "../../store/auth-context";
+import { useHistory } from "react-router-dom";
 
 const URL =
   "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyAYxTFqq5bGdBgpsFpv-KUUNygDTUG0Vlw";
 const ProfileForm = () => {
+  const history = useHistory();
   const passwordInputRef = useRef();
 
   const authCtx = useContext(AuthContext);
@@ -28,6 +30,7 @@ const ProfileForm = () => {
     })
       .then((res) => {
         // assume always succeeds
+        history.replace("/");
       })
       .catch((err) => console.log(err));
   };
