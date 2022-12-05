@@ -58,7 +58,11 @@ const AuthForm = () => {
           }
         })
         .then((data) => {
-          authCtx.login(data.idToken);
+          // data.expiresIn second * 1000 -> milisecond
+          const expirationTime = new Date(
+            new Date().getTime() + +data.expiresIn * 1000
+          );
+          authCtx.login(data.idToken, expirationTime.toISOString());
           history.replace("/");
         })
         .catch((err) => {
@@ -97,7 +101,10 @@ const AuthForm = () => {
           }
         })
         .then((data) => {
-          authCtx.login(data.idToken);
+          const expirationTime = new Date(
+            new Date().getTime() + +data.expiresIn * 1000
+          );
+          authCtx.login(data.idToken, expirationTime.toISOString());
           history.replace("/");
         })
         .catch((err) => {
