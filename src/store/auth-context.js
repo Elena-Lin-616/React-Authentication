@@ -10,17 +10,22 @@ const AuthContext = React.createContext({
 });
 
 export const AuthContextProvider = (props) => {
-  const [token, setToken] = useState("");
+  const initialToken = localStorage.getItem("token");
+  const [token, setToken] = useState(initialToken); // read data from local storage
 
   const userIsLoggedIn = !!token; //empty string->false, "xxx"->true
 
   // function to change the token state
   const handleLogin = (token) => {
+    // store token to local storage, which can store primitive type data
+    // object -> string
     setToken(token);
+    localStorage.setItem("token", token); // store token to local storage
   };
 
   const handleLogout = () => {
     setToken("");
+    localStorage.removeItem("token"); // remove token from local storage to logout
   };
 
   const contextValue = {
